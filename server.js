@@ -29,5 +29,8 @@ app.post('/getDownloadUrl', function(req, res) {
 	res.end(JSON.stringify(jsonResponse));
 });
 
-app.listen(80);
-
+var ipaddress = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+app.listen( port, ipaddress, function() {
+    console.log((new Date()) + ' Server is listening on port 8080');
+});
