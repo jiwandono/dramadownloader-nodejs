@@ -4,23 +4,28 @@ var fs         = require('fs');
 var config     = require('./config');
 var dramacool  = require('./dramacool');
 
+var counter = 0;
+
 var app = express();
 
 app.use(bodyParser.urlencoded());
 app.use(express.static(__dirname + '/public'));
 
 app.post('/getDownloadInfo', function(req, res) {
-	console.log('POST /getDownload ' + req.body.url);
-
 	var url = req.body.url;
 	var downloadInfo = null;
 
 	if(url) {
+		var success = 0;
 		try {
 			downloadInfo = dramacool.getDownloadInfo(url);
+			success = 1;
 		} catch (e) {
 			// Do nothing :P
 		}
+		
+		console.log('POST /getDownloadInfo ' + counter + ' ' + success + ' ' + req.body.url);
+		counter++;
 	}
 
 	var jsonResponse = {'downloadInfo': downloadInfo};
