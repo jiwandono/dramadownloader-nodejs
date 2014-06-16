@@ -1,6 +1,6 @@
 var httpsync = require('httpsync');
-var cheerio = require('cheerio');
-var config = require('./config');
+var cheerio  = require('cheerio');
+var util     = require('./util');
 
 var dramacoolDomain = 'www.dramacool.com';
 var dramacoolPrefix = 'http://www.dramacool.com/embeddrama-';
@@ -34,9 +34,7 @@ var getDownloadInfo = function(url) {
 
 	if(downloadUrl) {
 		var title = $('.title-detail-ep-film').text().trim();
-		var filename = title + ' ' + config.fileSuffix;
-		filename = encodeURIComponent(filename);
-		downloadUrl += '&title=' + filename;
+		downloadUrl += '&title=' + util.buildFilename(title);
 		
 		downloadInfo = {
 			url: downloadUrl,
