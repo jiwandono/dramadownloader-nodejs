@@ -6,3 +6,13 @@ module.exports.buildFilename = function(title) {
 	
 	return filename;
 };
+
+module.exports.findDownloader = function(url, downloaders) {
+	for(var i = 0; i < downloaders.length; i++) {
+		if(url.indexOf(downloaders[i].siteUrl) === 0) {
+			return downloaders[i];
+		}
+	}
+	
+	return null;
+};

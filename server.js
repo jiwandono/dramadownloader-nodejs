@@ -1,8 +1,15 @@
 var express    = require('express');
 var bodyParser = require('body-parser');
 var fs         = require('fs');
+
 var config     = require('./config');
+var util       = require('./util');
+
 var dramacool  = require('./dramacool');
+
+var downloaders = [
+	dramacool
+];
 
 var counter = 0;
 
@@ -16,14 +23,16 @@ app.post('/getDownloadInfo', function(req, res) {
 	var downloadInfo = null;
 
 	if(url) {
-		var success = 0;
-		try {
-			downloadInfo = dramacool.getDownloadInfo(url);
-			success = 1;
-		} catch (e) {
-			// Do nothing :P
+		var downloader = util.findDownloader(url, downloaders);
+		if(downloader) {
+			try {
+				downloadInfo = downloader.getDownloadInfo(url);
+			} catch (e) {
+				// Do nothing :P
+			}
 		}
 		
+		var success = downloadInfo ? 1 : 0;
 		console.log('POST /getDownloadInfo ' + counter + ' ' + success + ' ' + req.body.url);
 		counter++;
 	}

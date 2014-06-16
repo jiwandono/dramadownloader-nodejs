@@ -2,9 +2,10 @@ var httpsync = require('httpsync');
 var cheerio  = require('cheerio');
 var util     = require('./util');
 
-var dramacoolDomain = 'www.dramacool.com';
-var dramacoolPrefix = 'http://www.dramacool.com/embeddrama-';
-var dramacoolSuffix = '.html';
+var siteUrl = 'http://www.dramacool.com/';
+
+var targetPrefix = 'http://www.dramacool.com/embeddrama-';
+var targetSuffix = '.html';
 
 var getDownloadInfo = function(url) {
 	if(url.indexOf('http://') === 0) {
@@ -23,8 +24,8 @@ var getDownloadInfo = function(url) {
 	for(var i = 0; i < iframes.length; i++) {
 		var src = iframes[i].attribs.src;
 		if(src) {
-			if(src.indexOf(dramacoolPrefix) === 0) {
-				var downloadUrlBase64 = src.substring(dramacoolPrefix.length, src.indexOf(dramacoolSuffix));
+			if(src.indexOf(targetPrefix) === 0) {
+				var downloadUrlBase64 = src.substring(targetPrefix.length, src.indexOf(targetSuffix));
 				downloadUrl = new Buffer(downloadUrlBase64, 'base64').toString('utf8');
 			}
 		}
@@ -47,4 +48,5 @@ var getDownloadInfo = function(url) {
 };
 
 module.exports.getDownloadInfo = getDownloadInfo;
+module.exports.siteUrl = siteUrl;
 
