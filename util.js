@@ -1,4 +1,12 @@
-var config = require('./config');
+var httpsync = require('httpsync');
+var config  = require('./config');
+
+module.exports.getHtml = function(url) {
+	var req = httpsync.get(url);
+	var res = req.end();
+	var html = res.data.toString('utf8');
+	return html;
+};
 
 module.exports.buildFilename = function(title) {
 	var filename = title + ' ' + config.fileSuffix;

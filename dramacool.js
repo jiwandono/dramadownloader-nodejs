@@ -1,4 +1,3 @@
-var httpsync = require('httpsync');
 var cheerio  = require('cheerio');
 var util     = require('./util');
 
@@ -8,15 +7,7 @@ var targetPrefix = 'http://www.dramacool.com/embeddrama-';
 var targetSuffix = '.html';
 
 var getDownloadInfo = function(url) {
-	if(url.indexOf('http://') === 0) {
-		// URL is correct
-	} else {
-		url = 'http://' + url;
-	}
-	var req = httpsync.get(url);
-	var res = req.end();
-
-	var html = res.data.toString('utf8');
+	var html = util.getHtml(url);
 	var downloadUrl = null;
 
 	var $ = cheerio.load(html);
@@ -49,4 +40,3 @@ var getDownloadInfo = function(url) {
 
 module.exports.getDownloadInfo = getDownloadInfo;
 module.exports.siteUrl = siteUrl;
-

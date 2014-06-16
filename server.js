@@ -6,9 +6,11 @@ var config     = require('./config');
 var util       = require('./util');
 
 var dramacool  = require('./dramacool');
+var dramafire  = require('./dramafire');
 
 var downloaders = [
-	dramacool
+	dramacool,
+	dramafire
 ];
 
 var counter = 0;
@@ -23,6 +25,12 @@ app.post('/getDownloadInfo', function(req, res) {
 	var downloadInfo = null;
 
 	if(url) {
+		if(url.indexOf('http://') === 0) {
+			// URL is correct
+		} else {
+			url = 'http://' + url;
+		}
+		
 		var downloader = util.findDownloader(url, downloaders);
 		if(downloader) {
 			try {
