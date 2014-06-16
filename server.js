@@ -40,8 +40,8 @@ app.post('/getDownloadInfo', function(req, res) {
 			}
 		}
 		
-		var success = downloadInfo ? 1 : 0;
-		console.log('POST /getDownloadInfo ' + counter + ' ' + success + ' ' + req.body.url);
+		var status = downloadInfo ? 'D_SUCCESS' : 'D_FAIL';
+		console.log('POST /getDownloadInfo ' + counter + ' ' + status + ' ' + req.body.url);
 		counter++;
 	}
 
