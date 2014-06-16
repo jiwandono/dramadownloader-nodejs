@@ -1,6 +1,7 @@
 var express    = require('express');
 var bodyParser = require('body-parser');
 var fs         = require('fs');
+var config     = require('./config');
 var dramacool  = require('./dramacool');
 
 var app = express();
@@ -8,29 +9,28 @@ var app = express();
 app.use(bodyParser.urlencoded());
 app.use(express.static(__dirname + '/public'));
 
-app.post('/getDownloadUrl', function(req, res) {
-	console.log('POST /getDownloadUrl');
-	console.dir(req.body);
+app.post('/getDownloadInfo', function(req, res) {
+	console.log('POST /getDownload ' + req.body.url);
 
-	var dramacoolUrl = req.body.dramacoolUrl;
-	var downloadUrl = null;
+	var url = req.body.url;
+	var downloadInfo = null;
 
-	if(dramacoolUrl) {
+	if(url) {
 		try {
-			downloadUrl = dramacool.getDownloadUrl(dramacoolUrl);
+			downloadInfo = dramacool.getDownloadInfo(url);
 		} catch (e) {
 			// Do nothing :P
 		}
 	}
 
-	var jsonResponse = {'downloadUrl': downloadUrl};
+	var jsonResponse = {'downloadInfo': downloadInfo};
 
 	res.writeHead(200, {'Content-Type': 'application/json'});
 	res.end(JSON.stringify(jsonResponse));
 });
 
-var ipaddress = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
-var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-app.listen( port, ipaddress, function() {
-    console.log((new Date()) + ' Server is listening on port 8080');
+var ipaddress = process.env.OPENSHIFT_NODEJS_IP || config.ip;
+var port = process.env.OPENSHIFT_NODEJS_PORT || config.port;
+app.listen(port, ipaddress, function() {
+	console.log((new Date()) + ' Server is listening on port ' + port);
 });

@@ -1,18 +1,18 @@
 var httpsync = require('httpsync');
 var cheerio = require('cheerio');
+var config = require('./config');
 
-var fileSuffix = '[dramacooldownload.com]'
 var dramacoolDomain = 'www.dramacool.com';
 var dramacoolPrefix = 'http://www.dramacool.com/embeddrama-';
 var dramacoolSuffix = '.html';
 
-var getDownloadUrl = function(dramacoolUrl) {
-	if(dramacoolUrl.indexOf('http://') === 0) {
+var getDownloadInfo = function(url) {
+	if(url.indexOf('http://') === 0) {
 		// URL is correct
 	} else {
-		dramacoolUrl = 'http://' + dramacoolUrl;
+		url = 'http://' + url;
 	}
-	var req = httpsync.get(dramacoolUrl);
+	var req = httpsync.get(url);
 	var res = req.end();
 
 	var html = res.data.toString('utf8');
@@ -29,16 +29,24 @@ var getDownloadUrl = function(dramacoolUrl) {
 			}
 		}
 	}
+	
+	var downloadInfo = null;
 
 	if(downloadUrl) {
 		var title = $('.title-detail-ep-film').text().trim();
-		title += ' ' + fileSuffix;
-		title = encodeURIComponent(title);
-		downloadUrl += '&title=' + title;
+		var filename = title + ' ' + config.fileSuffix;
+		filename = encodeURIComponent(filename);
+		downloadUrl += '&title=' + filename;
+		
+		downloadInfo = {
+			url: downloadUrl,
+			title: title,
+			thumbnail: null
+		};
 	}
 
-	return downloadUrl;
+	return downloadInfo;
 };
 
-module.exports.getDownloadUrl = getDownloadUrl;
+module.exports.getDownloadInfo = getDownloadInfo;
 

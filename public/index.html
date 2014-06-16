@@ -2,14 +2,45 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>title</title>
-		<link rel="stylesheet" href="style.css">
-		<script src="script.js"></script>
+		<meta name="description" content="Easily download asian dramas or movies from popular streaming sites.">
+
+		<title>DramaDownloader.com - Download the drama, without all the drama</title>
+
+		<link rel="stylesheet" href="page.css" />
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="purl.js"></script>
+		<script src="page.js"></script>
 	</head>
 	<body>
-    	<form action="getDownloadUrl" method="post">
-			<input type="text" name="dramacoolUrl" />
-			<input type="submit" value="Continue" />
-		</form>
+		<div class="container">
+			<div id="header">
+				<h1><a href="." class="logo" title="DramaDownloader.com: Download the drama, without all the drama"></a></h1>
+			</div>
+
+			<div class="clear"></div>
+
+			<div id="content">
+				<form method="get">
+					<input type="text" id="form-text" class="form-common" name="url" placeholder="enter the url of the drama you want to download" />
+					<input type="submit" id="form-submit" class="form-common button" value="CONTINUE" />
+				</form>
+			</div>
+
+			<div class="clear"></div>
+
+			<div class="result" id="result-processing"></div>
+
+			<div class="result" id="result-success">
+				<a id="download-url" class="button">DOWNLOAD NOW</a>
+			</div>
+
+			<div class="result" id="result-fail">
+				<h2>Oops :(</h2>
+				<p>DramaDownloader.com is having trouble processing your download request. Please check your URL and try again.</p>
+			</div>
+
+			<div class="clear"></div>
+		</div>
 	</body>
 </html>
