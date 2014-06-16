@@ -1,7 +1,14 @@
 $(function() {
+	handleInputBoxChange();
 	detectRequestParameter();
 	
 	/* ---------------- */
+	
+	function handleInputBoxChange() {
+		$('#form-text').on('input', function() {
+			$('.result').hide();
+		});
+	}
 	
 	function detectRequestParameter() {
 		var url = $.url().param('url');
