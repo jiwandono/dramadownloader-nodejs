@@ -94,5 +94,8 @@
 }
 
 #result-fail {
-	width: 640px;
+	width: 620px;
+	border: 1px solid #3e3e3d;
+	padding-left: 10px;
+	padding-right: 10px;
 }
