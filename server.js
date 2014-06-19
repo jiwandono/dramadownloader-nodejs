@@ -5,12 +5,8 @@ var fs         = require('fs');
 var config     = require('./config');
 var util       = require('./util');
 
-var dramacool  = require('./downloader/dramacool');
-var dramafire  = require('./downloader/dramafire');
-
 var downloaders = [
-	dramacool,
-	dramafire
+	require('./downloader/dramacool')
 ];
 
 var counter = 0;
@@ -32,9 +28,9 @@ app.post('/getDownloadInfo', function(req, res) {
 		}
 		
 		var downloader = util.findDownloader(url, downloaders);
-		if(downloader) {
+		if(downloader !== null) {
 			try {
-				downloadInfo = downloader.getDownloadInfo(url);
+				downloadInfo = downloader.getDownloadables(url);
 			} catch (e) {
 				// Do nothing :P
 			}

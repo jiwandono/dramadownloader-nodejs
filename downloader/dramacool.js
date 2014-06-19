@@ -1,12 +1,17 @@
-var cheerio  = require('cheerio');
-var util     = require('../util');
+/* Downloader Implementation for DramaCool.com */
 
-var siteUrl = 'http://www.dramacool.com/';
+var DownloaderBase = require('./DownloaderBase');
+var cheerio        = require('cheerio');
+var util           = require('../util');
 
-var targetPrefix = 'http://www.dramacool.com/embeddrama-';
-var targetSuffix = '.html';
+function DownloaderImpl() {}
 
-var getDownloadInfo = function(url) {
+DownloaderImpl.prototype = new DownloaderBase();
+DownloaderImpl.prototype.domains = ['www.dramacool.com'];
+DownloaderImpl.prototype.getDownloadables = function(url) {
+	var targetPrefix = 'http://www.dramacool.com/embeddrama-';
+	var targetSuffix = '.html';
+
 	var html = util.getHtml(url);
 	var downloadUrl = null;
 
@@ -38,5 +43,4 @@ var getDownloadInfo = function(url) {
 	return downloadInfo;
 };
 
-module.exports.getDownloadInfo = getDownloadInfo;
-module.exports.siteUrl = siteUrl;
+module.exports = new DownloaderImpl();

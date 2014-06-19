@@ -17,9 +17,7 @@ module.exports.buildFilename = function(title) {
 
 module.exports.findDownloader = function(url, downloaders) {
 	for(var i = 0; i < downloaders.length; i++) {
-		if(url.indexOf(downloaders[i].siteUrl) === 0) {
-			return downloaders[i];
-		}
+		if(downloaders[i].isSupported(url)) return downloaders[i];
 	}
 	
 	return null;
