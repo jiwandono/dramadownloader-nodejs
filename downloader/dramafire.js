@@ -1,5 +1,5 @@
 var cheerio  = require('cheerio');
-var util     = require('./util');
+var util     = require('../util');
 
 var siteUrl = 'http://dramafire.com/';
 

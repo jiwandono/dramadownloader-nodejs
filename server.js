@@ -5,8 +5,8 @@ var fs         = require('fs');
 var config     = require('./config');
 var util       = require('./util');
 
-var dramacool  = require('./dramacool');
-var dramafire  = require('./dramafire');
+var dramacool  = require('./downloader/dramacool');
+var dramafire  = require('./downloader/dramafire');
 
 var downloaders = [
 	dramacool,
