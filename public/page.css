@@ -78,16 +78,16 @@
 }
 
 #result-success {
-	width: 180px;
+	
 }
 
-#download-url {
+.button-download {
 	text-decoration: none;
 	text-align: center;
 	display: block;
 	padding-top: 10px;
 	padding-bottom: 10px;
-	width: 180px;
+	width: 200px;
 	border-style: none;
 	font-size: 18px;
 	box-sizing: content-box;

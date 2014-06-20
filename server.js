@@ -16,9 +16,9 @@ var app = express();
 app.use(bodyParser.urlencoded());
 app.use(express.static(__dirname + '/public'));
 
-app.post('/getDownloadInfo', function(req, res) {
+app.post('/getDownloadables', function(req, res) {
 	var url = req.body.url;
-	var downloadInfo = null;
+	var downloadables = null;
 
 	if(url) {
 		if(url.indexOf('http://') === 0) {
@@ -30,18 +30,18 @@ app.post('/getDownloadInfo', function(req, res) {
 		var downloader = util.findDownloader(url, downloaders);
 		if(downloader !== null) {
 			try {
-				downloadInfo = downloader.getDownloadables(url);
+				downloadables = downloader.getDownloadables(url);
 			} catch (e) {
 				// Do nothing :P
 			}
 		}
 		
-		var status = downloadInfo ? 'D_SUCCESS' : 'D_FAIL';
+		var status = downloadables ? 'D_SUCCESS' : 'D_FAIL';
 		console.log('POST /getDownloadInfo ' + counter + ' ' + status + ' ' + req.body.url);
 		counter++;
 	}
 
-	var jsonResponse = {'downloadInfo': downloadInfo};
+	var jsonResponse = {'downloadables': downloadables};
 
 	res.writeHead(200, {'Content-Type': 'application/json'});
 	res.end(JSON.stringify(jsonResponse));

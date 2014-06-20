@@ -1,6 +1,7 @@
 /* Downloader Implementation for DramaCool.com */
 
 var DownloaderBase = require('./DownloaderBase');
+var Downloadables   = require('./Downloadables');
 var cheerio        = require('cheerio');
 var util           = require('../util');
 
@@ -27,20 +28,20 @@ DownloaderImpl.prototype.getDownloadables = function(url) {
 		}
 	}
 	
-	var downloadInfo = null;
+	var downloadables = [];
 
 	if(downloadUrl) {
 		var title = $('.title-detail-ep-film').text().trim();
 		downloadUrl += '&title=' + util.buildFilename(title);
 		
-		downloadInfo = {
+		downloadables.push(new Downloadables({
 			url: downloadUrl,
 			title: title,
 			thumbnail: null
-		};
+		}));
 	}
 
-	return downloadInfo;
+	return downloadables;
 };
 
 module.exports = new DownloaderImpl();

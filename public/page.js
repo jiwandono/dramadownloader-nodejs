@@ -28,12 +28,12 @@ $(function() {
 		
 		$.ajax({
 			type: "POST",
-			url: "getDownloadInfo",
+			url: "getDownloadables",
 			data: postData,
 			success: function(response) {
-				var downloadInfo = response.downloadInfo;
-				if(downloadInfo) {
-					handleSuccess(downloadInfo);
+				var downloadables = response.downloadables;
+				if(downloadables) {
+					handleSuccess(downloadables);
 				} else {
 					handleFail();
 				}
@@ -44,13 +44,28 @@ $(function() {
 		});
 	}
 	
-	function handleSuccess(downloadInfo) {
-		console.log(downloadInfo);
+	function createDownloadButtons(downloadables) {
+		var caption = "DOWNLOAD";
+		for(var i = 0; i < downloadables.length; i++) {
+			var buttonText = downloadables.length > 1
+					? caption + ' ' + 'PART ' + (i+1)
+					: caption;
+			var $button = $('<a>', {
+				class: 'button button-download',
+				href : downloadables[i].url
+			}).text(buttonText);
+			
+			$('#download-links').append($button);
+		}
+	}
+	
+	function handleSuccess(downloadables) {
 		$('form input').removeAttr('disabled', 'disabled');
-		$('#download-url').attr('href', downloadInfo.url);
-		$('#download-url').attr('title', 'Download ' + downloadInfo.title);
 		$('.result').hide();
 		$('#result-success').show();
+		
+		$('#download-title').text(downloadables[0].title);
+		createDownloadButtons(downloadables);
 	}
 	
 	function handleFail() {
