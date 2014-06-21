@@ -51,8 +51,9 @@ $(function() {
 					? caption + ' ' + 'PART ' + (i+1)
 					: caption;
 			var $button = $('<a>', {
-				class: 'button button-download',
-				href : downloadables[i].url
+				class   : 'button button-download',
+				href    : downloadables[i].url,
+				download: ''
 			}).text(buttonText);
 			
 			$('#download-links').append($button);
