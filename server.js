@@ -6,7 +6,8 @@ var config     = require('./config');
 var util       = require('./util');
 
 var downloaders = [
-	require('./downloader/dramacool')
+	require('./downloader/dramacool'),
+	require('./downloader/dramago')
 ];
 
 var counter = 0;

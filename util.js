@@ -22,3 +22,15 @@ module.exports.findDownloader = function(url, downloaders) {
 	
 	return null;
 };
+
+module.exports.substring = function(string, beginsWith, endsWith) {
+	var offset1 = string.indexOf(beginsWith);
+	var offset2 = string.indexOf(endsWith);
+	
+	if(offset1 >= 0 && offset2 > offset1) {
+		offset2 += endsWith.length;
+		return string.substring(offset1, offset2);
+	}
+	
+	return null;
+};

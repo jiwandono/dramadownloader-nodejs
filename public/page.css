@@ -84,9 +84,11 @@
 .button-download {
 	text-decoration: none;
 	text-align: center;
-	display: block;
+	display: inline-block;
 	padding-top: 10px;
 	padding-bottom: 10px;
+	margin-left: 4px;
+	margin-right: 4px;
 	width: 200px;
 	border-style: none;
 	font-size: 18px;
