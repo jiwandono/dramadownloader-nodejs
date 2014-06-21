@@ -1,4 +1,4 @@
-/* Downloader Implementation for DramaGo.com */
+/* Downloader Implementation for GoodDrama.net */
 
 var DownloaderBase = require('./DownloaderBase');
 var Downloadables   = require('./Downloadables');
@@ -8,7 +8,7 @@ var util           = require('../util');
 function DownloaderImpl() {}
 
 DownloaderImpl.prototype = new DownloaderBase();
-DownloaderImpl.prototype.domains = ['www.dramago.com'];
+DownloaderImpl.prototype.domains = ['www.gooddrama.net'];
 DownloaderImpl.prototype.getDownloadables = function(url) {
 	var downloadables = [];
 	
