@@ -40,7 +40,7 @@ app.post('/getDownloadables', function(req, res) {
 		}
 		
 		var status = downloadables ? 'D_SUCCESS' : 'D_FAIL';
-		console.log('POST /getDownloadInfo ' + counter + ' ' + status + ' ' + req.connection.remoteAddress + ' ' + req.body.url);
+		console.log('POST /getDownloadInfo ' + counter + ' ' + status + ' ' + request.headers['X-Forwarded-For'] + ' ' + req.body.url);
 		counter++;
 	}
 
