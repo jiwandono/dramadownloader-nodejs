@@ -50,7 +50,7 @@ DownloaderImpl.prototype.getDownloadables = function(url) {
 	var iframeHtml = util.getHtml(iframes[compatibleIframeNumber].attribs.src);
 	if(localIframeNumber == 3) {
 		var $iframe = cheerio.load(iframeHtml);
-		var downloadUrl = $iframe('meta[property=og:video]')[0].attribs.content;
+		var downloadUrl = $iframe('meta[property="og:video"]').attr('content');
 		downloadables.push(new Downloadables({
 			url: downloadUrl,
 			title: title,
