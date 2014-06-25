@@ -8,7 +8,8 @@ var util       = require('./util');
 var downloaders = [
 	require('./downloader/dramacool'),
 	require('./downloader/dramago'),
-	require('./downloader/gooddrama')
+	require('./downloader/gooddrama'),
+	require('./downloader/animehere')
 ];
 
 var counter = 0;
