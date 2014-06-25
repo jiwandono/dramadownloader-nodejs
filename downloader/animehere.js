@@ -15,17 +15,16 @@ DownloaderImpl.prototype.getDownloadables = function(url) {
 	var iframePrefixes = [
 		'http://videofun.me/embed',
 		'http://play44.net/embed.php',
-		'http://byzoo.org/embed.php'
+		'http://byzoo.org/embed.php',
+		'http://yourupload.com/embed_ext/videoweed/'
 	];
 
 	var iframeServers = [
 		'videofun',
 		'play44',
-		'byzoo'
+		'byzoo',
+		null
 	];
-	
-	var linkPrefix = 'http://gateway';
-	var linkSuffix = 'server%3D'; // Plus one of iframeServers
 
 	var html = util.getHtml(url);
 
@@ -33,13 +32,15 @@ DownloaderImpl.prototype.getDownloadables = function(url) {
 	var title = $('.tmain h1').text().trim();
 	
 	var iframes = $('#playbox iframe[src]');
-	var compatibleIframeNumber = -1;
+	var compatibleIframeNumber = -1; // Iframe in the page
+	var localIframeNumber = -1; // Iframe in the iframePrefix array
 
 	outerloop:
 	for(var i = 0; i < iframes.length; i++) {
 		for(var j = 0; j < iframePrefixes.length; j++) {
 			if(iframes[i].attribs.src.indexOf(iframePrefixes[j]) === 0) {
 				compatibleIframeNumber = i;
+				localIframeNumber = j;
 				break outerloop;
 			}
 		}
@@ -47,13 +48,25 @@ DownloaderImpl.prototype.getDownloadables = function(url) {
 	if(compatibleIframeNumber < 0) return downloadables;
 	
 	var iframeHtml = util.getHtml(iframes[compatibleIframeNumber].attribs.src);
-	var downloadUrl = util.substring(iframeHtml, linkPrefix, linkSuffix + iframeServers[compatibleIframeNumber]);
-	downloadUrl = decodeURIComponent(downloadUrl);
-	downloadables.push(new Downloadables({
-		url: downloadUrl,
-		title: title,
-		thumbnail: null
-	}));
+	if(localIframeNumber == 3) {
+		var $iframe = cheerio.load(iframeHtml);
+		var downloadUrl = $iframe('meta[property=og:video]')[0].attribs.content;
+		downloadables.push(new Downloadables({
+			url: downloadUrl,
+			title: title,
+			thumbnail: null
+		}));
+	} else {
+		var linkPrefix = 'http://gateway';
+		var linkSuffix = 'server%3D'; // Plus one of iframeServers
+		var downloadUrl = util.substring(iframeHtml, linkPrefix, linkSuffix + iframeServers[compatibleIframeNumber]);
+		downloadUrl = decodeURIComponent(downloadUrl);
+		downloadables.push(new Downloadables({
+			url: downloadUrl,
+			title: title,
+			thumbnail: null
+		}));
+	}
 
 	return downloadables;
 };
