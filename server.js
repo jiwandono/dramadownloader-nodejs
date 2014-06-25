@@ -21,7 +21,7 @@ app.use(express.static(__dirname + '/public'));
 
 app.post('/getDownloadables', function(req, res) {
 	var url = req.body.url;
-	var downloadables = null;
+	var downloadables = [];
 
 	if(url) {
 		if(url.indexOf('http://') === 0) {
@@ -39,7 +39,7 @@ app.post('/getDownloadables', function(req, res) {
 			}
 		}
 		
-		var status = downloadables ? 'D_SUCCESS' : 'D_FAIL';
+		var status = downloadables.length > 0 ? 'D_SUCCESS' : 'D_FAIL';
 		console.log('POST /getDownloadInfo ' + counter + ' ' + status + ' ' + req.headers['X-Forwarded-For'] + ' ' + req.body.url);
 		counter++;
 	}
