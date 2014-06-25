@@ -32,7 +32,7 @@ $(function() {
 			data: postData,
 			success: function(response) {
 				var downloadables = response.downloadables;
-				if(downloadables) {
+				if(downloadables.length > 0) {
 					handleSuccess(downloadables);
 				} else {
 					handleFail();
