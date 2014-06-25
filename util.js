@@ -1,11 +1,11 @@
-var httpsync = require('httpsync');
 var config  = require('./config');
+var request = require('request');
 
-module.exports.getHtml = function(url) {
-	var req = httpsync.get(url);
-	var res = req.end();
-	var html = res.data.toString('utf8');
-	return html;
+module.exports.getHtml = function(url, callback) {
+	request.get(url, function(error, response, body) {
+		body = body || '';
+		callback(body);
+	});
 };
 
 module.exports.buildFilename = function(title) {
@@ -15,12 +15,12 @@ module.exports.buildFilename = function(title) {
 	return filename;
 };
 
-module.exports.findDownloader = function(url, downloaders) {
-	for(var i = 0; i < downloaders.length; i++) {
-		if(downloaders[i].isSupported(url)) return downloaders[i];
+module.exports.findDownloader = function(url) {
+	for(var i = 0; i < config.downloaders.length; i++) {
+		if(config.downloaders[i].isSupported(url)) return config.downloaders[i];
 	}
 	
-	return null;
+	return require('./downloader/null');
 };
 
 module.exports.substring = function(string, beginsWith, endsWith) {

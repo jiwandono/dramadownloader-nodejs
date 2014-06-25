@@ -1,5 +1,5 @@
 express
 body-parser
-httpsync
+request
 cheerio
 

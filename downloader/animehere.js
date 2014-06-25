@@ -1,7 +1,7 @@
 /* Downloader Implementation for DramaGo.com */
 
 var DownloaderBase = require('./DownloaderBase');
-var Downloadables   = require('./Downloadables');
+var Downloadables  = require('./Downloadables');
 var cheerio        = require('cheerio');
 var util           = require('../util');
 
@@ -9,66 +9,71 @@ function DownloaderImpl() {}
 
 DownloaderImpl.prototype = new DownloaderBase();
 DownloaderImpl.prototype.domains = ['www.animehere.com'];
-DownloaderImpl.prototype.getDownloadables = function(url) {
-	var downloadables = [];
-	
-	var iframePrefixes = [
-		'http://videofun.me/embed',
-		'http://play44.net/embed.php',
-		'http://byzoo.org/embed.php',
-		'http://yourupload.com/embed_ext/videoweed/'
-	];
+DownloaderImpl.prototype.getDownloadables = function(url, callback) {
+	util.getHtml(url, function(html) {
+		var downloadables = [];
 
-	var iframeServers = [
-		'videofun',
-		'play44',
-		'byzoo',
-		null
-	];
+		var $ = cheerio.load(html);
+		var iframes = $('#playbox iframe[src]');
+		
+		var iframePrefixes = [
+			'http://videofun.me/embed',
+			'http://play44.net/embed.php',
+			'http://byzoo.org/embed.php',
+			'http://yourupload.com/embed_ext/videoweed/'
+		];
+		
+		var compatibleIframeNumber = -1; // Iframe in the page
+		var iframePrefixIndex = -1; // Index in the iframePrefixes array
 
-	var html = util.getHtml(url);
-
-	var $ = cheerio.load(html);
-	var title = $('.tmain h1').text().trim();
-	
-	var iframes = $('#playbox iframe[src]');
-	var compatibleIframeNumber = -1; // Iframe in the page
-	var localIframeNumber = -1; // Iframe in the iframePrefix array
-
-	outerloop:
-	for(var i = 0; i < iframes.length; i++) {
-		for(var j = 0; j < iframePrefixes.length; j++) {
-			if(iframes[i].attribs.src.indexOf(iframePrefixes[j]) === 0) {
-				compatibleIframeNumber = i;
-				localIframeNumber = j;
-				break outerloop;
+		outerloop:
+		for(var i = 0; i < iframes.length; i++) {
+			for(var j = 0; j < iframePrefixes.length; j++) {
+				if(iframes[i].attribs.src.indexOf(iframePrefixes[j]) === 0) {
+					compatibleIframeNumber = i;
+					iframePrefixIndex = j;
+					break outerloop;
+				}
 			}
 		}
-	}
-	if(compatibleIframeNumber < 0) return downloadables;
-	
-	var iframeHtml = util.getHtml(iframes[compatibleIframeNumber].attribs.src);
-	if(localIframeNumber == 3) {
-		var $iframe = cheerio.load(iframeHtml);
-		var downloadUrl = $iframe('meta[property="og:video"]').attr('content');
-		downloadables.push(new Downloadables({
-			url: downloadUrl,
-			title: title,
-			thumbnail: null
-		}));
-	} else {
-		var linkPrefix = 'http://gateway';
-		var linkSuffix = 'server%3D'; // Plus one of iframeServers
-		var downloadUrl = util.substring(iframeHtml, linkPrefix, linkSuffix + iframeServers[compatibleIframeNumber]);
-		downloadUrl = decodeURIComponent(downloadUrl);
-		downloadables.push(new Downloadables({
-			url: downloadUrl,
-			title: title,
-			thumbnail: null
-		}));
-	}
+		
+		if(compatibleIframeNumber < 0) {
+			callback(downloadables);
+			return;
+		}
+		
+		var videoServers = [
+			'videofun',
+			'play44',
+			'byzoo',
+			null
+		];
 
-	return downloadables;
+		var title = $('.tmain h1').text().trim();
+		util.getHtml(iframes[compatibleIframeNumber].attribs.src, function(iframeHtml) {
+			if(iframePrefixIndex === 3) {
+				var $iframe = cheerio.load(iframeHtml);
+				var downloadUrl = $iframe('meta[property="og:video"]').attr('content');
+				downloadables.push(new Downloadables({
+					url: downloadUrl,
+					title: title,
+					thumbnail: null
+				}));
+			} else {
+				var videoPrefix = 'http://gateway';
+				var videoSuffix = 'server%3D'; // Plus one of iframeServers
+				var downloadUrl = util.substring(iframeHtml, videoPrefix, videoSuffix + videoServers[compatibleIframeNumber]);
+				downloadUrl = decodeURIComponent(downloadUrl);
+				downloadables.push(new Downloadables({
+					url: downloadUrl,
+					title: title,
+					thumbnail: null
+				}));
+			}
+
+			callback(downloadables);
+		});
+	});
 };
 
 module.exports = new DownloaderImpl();
