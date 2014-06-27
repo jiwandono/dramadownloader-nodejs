@@ -104,6 +104,15 @@
 	padding-right: 10px;
 }
 
+.info small {
+	font-size: 10px;
+	color: #b6b6b6;
+}
+
+.advertisement {
+	text-align: center;
+}
+
 .updates-description {
 	font-weight: bold;
 }
