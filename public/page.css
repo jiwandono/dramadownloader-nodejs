@@ -121,6 +121,20 @@
 	right: -170px;
 }
 
+.tw-share-button {
+	display: inline-block;
+	position: relative;
+	top: 3px;
+	left: 30px;
+}
+
+.gp-share-button {
+	display: inline-block;
+	position: relative;
+	top: 3px;
+	left: 25px;
+}
+
 .updates-description {
 	font-weight: bold;
 }
