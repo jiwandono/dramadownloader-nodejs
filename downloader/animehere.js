@@ -17,10 +17,12 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		var iframes = $('#playbox iframe[src]');
 		
 		var iframePrefixes = [
+			'http://yourupload.com/embed_ext/videoweed/',
 			'http://videofun.me/embed',
+			'http://videobug.net/embed.php',
 			'http://play44.net/embed.php',
 			'http://byzoo.org/embed.php',
-			'http://yourupload.com/embed_ext/videoweed/'
+			'http://playpanda.net/embed.php'
 		];
 		
 		var compatibleIframeNumber = -1; // Iframe in the page
@@ -28,7 +30,7 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 
 		outerloop:
 		for(var i = 0; i < iframes.length; i++) {
-			for(var j = 0; j < iframePrefixes.length; j++) {
+			for(var j = 1; j < iframePrefixes.length; j++) { // Skip yourupload.com
 				if(iframes[i].attribs.src.indexOf(iframePrefixes[j]) === 0) {
 					compatibleIframeNumber = i;
 					iframePrefixIndex = j;
@@ -43,15 +45,17 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		}
 		
 		var videoServers = [
+			null,
 			'videofun',
+			'videobug',
 			'play44',
 			'byzoo',
-			null
+			'vidzur'
 		];
 
 		var title = $('.tmain h1').text().trim();
 		util.getHtml(iframes[compatibleIframeNumber].attribs.src, function(iframeHtml) {
-			if(iframePrefixIndex === 3) {
+			if(iframePrefixIndex === 0) {
 				var $iframe = cheerio.load(iframeHtml);
 				var downloadUrl = $iframe('meta[property="og:video"]').attr('content');
 				downloadables.push(new Downloadables({
@@ -62,7 +66,7 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			} else {
 				var videoPrefix = 'http://gateway';
 				var videoSuffix = 'server%3D'; // Plus one of iframeServers
-				var downloadUrl = util.substring(iframeHtml, videoPrefix, videoSuffix + videoServers[compatibleIframeNumber]);
+				var downloadUrl = util.substring(iframeHtml, videoPrefix, videoSuffix + videoServers[iframePrefixIndex]);
 				downloadUrl = decodeURIComponent(downloadUrl);
 				downloadables.push(new Downloadables({
 					url: downloadUrl,
