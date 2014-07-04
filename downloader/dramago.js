@@ -1,4 +1,4 @@
-/* Downloader Implementation for DramaGo.com */
+/* Downloader Implementation for DramaGo.com and similar sites */
 
 var DownloaderBase = require('./DownloaderBase');
 var Downloadables  = require('./Downloadables');
@@ -28,11 +28,11 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		var iframePrefixIndex = -1; // Index in the iframePrefixes array
 
 		outerloop:
-		for(var i = 0; i < iframes.length; i++) {
-			for(var j = 0; j < iframePrefixes.length; j++) {
-				if(iframes[i].attribs.src.indexOf(iframePrefixes[j]) === 0) {
-					compatibleIframeNumber = i;
-					iframePrefixIndex = j;
+		for(var i = 0; i < iframePrefixes.length; i++) {
+			for(var j = 0; j < iframes.length; j++) {
+				if(iframes[j].attribs.src.indexOf(iframePrefixes[i]) === 0) {
+					compatibleIframeNumber = j;
+					iframePrefixIndex = i;
 					break outerloop;
 				}
 			}
