@@ -22,7 +22,8 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			'http://play44.net/embed.php',
 			'http://byzoo.org/embed.php',
 			'http://playpanda.net/embed.php',
-			'http://yourupload.com/embed_ext/videoweed/'
+			'http://yourupload.com/embed/',
+			'http://embed.yucache.net/'
 		];
 		
 		var compatibleIframeNumber = -1; // Iframe in the page
@@ -50,24 +51,24 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			'play44',
 			'byzoo',
 			'vidzur',
+			null,
 			null
 		];
 
 		var title = $('.tmain h1').text().trim();
 		util.getHtml(iframes[compatibleIframeNumber].attribs.src, function(iframeHtml) {
-			if(iframePrefixIndex === 5) {
+			var downloadUrl = null;
+			if(iframePrefixIndex === 5 || iframePrefixIndex === 6) {
 				var $iframe = cheerio.load(iframeHtml);
-				var downloadUrl = $iframe('meta[property="og:video"]').attr('content');
-				downloadables.push(new Downloadables({
-					url: downloadUrl,
-					title: title,
-					thumbnail: null
-				}));
+				downloadUrl = $iframe('meta[property="og:video"]').attr('content');
 			} else {
 				var videoPrefix = 'http://gateway';
 				var videoSuffix = 'server%3D'; // Plus one of iframeServers
-				var downloadUrl = util.substring(iframeHtml, videoPrefix, videoSuffix + videoServers[iframePrefixIndex]);
+				downloadUrl = util.substring(iframeHtml, videoPrefix, videoSuffix + videoServers[iframePrefixIndex]);
 				downloadUrl = decodeURIComponent(downloadUrl);
+			}
+			
+			if(downloadUrl) {
 				downloadables.push(new Downloadables({
 					url: downloadUrl,
 					title: title,
