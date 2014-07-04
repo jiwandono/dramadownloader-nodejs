@@ -30,8 +30,6 @@ app.post('/getDownloadables', function(req, res) {
 	});
 });
 
-var ip = process.env.OPENSHIFT_NODEJS_IP || config.ip;
-var port = process.env.OPENSHIFT_NODEJS_PORT || config.port;
-app.listen(port, ip, function() {
-	console.log((new Date()) + ' Server is listening on port ' + port);
+app.listen(config.port, config.ip, function() {
+	console.log((new Date()) + ' Server is listening on port ' + config.port);
 });
