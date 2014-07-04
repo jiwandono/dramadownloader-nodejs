@@ -8,7 +8,7 @@ var util           = require('../util');
 function DownloaderImpl() {}
 
 DownloaderImpl.prototype = new DownloaderBase();
-DownloaderImpl.prototype.domains = ['www.dramago.com', 'www.gooddrama.net', 'www.animetoon.tv'];
+DownloaderImpl.prototype.domains = ['www.dramago.com', 'www.gooddrama.net', 'www.animetoon.tv', 'www.anime44.com', 'www.yodrama.com'];
 DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 	util.getHtml(url, function(html) {
 		var downloadables = [];
@@ -21,7 +21,9 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			'http://videobug.net/embed.php',
 			'http://play44.net/embed.php',
 			'http://byzoo.org/embed.php',
-			'http://playpanda.net/embed.php'
+			'http://playpanda.net/embed.php',
+			'http://yourupload.com/embed/',
+			'http://embed.yucache.net/'
 		];
 
 		var compatibleIframeNumber = -1; // Iframe in the page
@@ -48,12 +50,15 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			'videobug',
 			'play44',
 			'byzoo',
-			'vidzur'
+			'vidzur',
+			null,
+			null
 		];
 		
 		var title = $('h1.generic').text().trim();
 		
-		var parts = $($('.part_list')[compatibleIframeNumber]).find('a');
+		// .part_list and part_nav are mutually exclusive.
+		var parts = $($('.part_list, .part_nav')[compatibleIframeNumber]).find('a');
 		if(parts.length > 0) {
 			var remaining = parts.length;
 			for(var j = 0; j < parts.length; j++) {
@@ -64,10 +69,13 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 						var src = iframe.attribs.src;
 
 						util.getHtml(src, function(iframeHtml) {
-							var videoPrefix = 'http://gateway';
-							var videoSuffix = 'server%3D'; // Plus one of iframeServers
-							var downloadUrl = util.substring(iframeHtml, videoPrefix, videoSuffix + videoServers[iframePrefixIndex]);
-							downloadUrl = decodeURIComponent(downloadUrl);
+							var downloadUrl = null;
+							if(iframePrefixIndex === 5 || iframePrefixIndex === 6) {
+								downloadUrl = extractMethodB(iframeHtml);
+							} else {
+								downloadUrl = extractMethodA(iframeHtml, videoServers[iframePrefixIndex]);
+							}
+							
 							downloadables[part] = new Downloadables({
 								url: downloadUrl,
 								title: title,
@@ -87,20 +95,43 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			var src = iframe.attribs.src;
 
 			util.getHtml(src, function(iframeHtml) {
-				var videoPrefix = 'http://gateway';
-				var videoSuffix = 'server%3D'; // Plus one of iframeServers
-				var downloadUrl = util.substring(iframeHtml, videoPrefix, videoSuffix + videoServers[iframePrefixIndex]);
-				downloadUrl = decodeURIComponent(downloadUrl);
-				downloadables.push(new Downloadables({
-					url: downloadUrl,
-					title: title,
-					thumbnail: null
-				}));
+				var downloadUrl = null;
+				if(iframePrefixIndex === 5 || iframePrefixIndex === 6) {
+					downloadUrl = extractMethodB(iframeHtml);
+				} else {
+					downloadUrl = extractMethodA(iframeHtml, videoServers[iframePrefixIndex]);
+				}
+				
+				if(downloadUrl) {
+					downloadables.push(new Downloadables({
+						url: downloadUrl,
+						title: title,
+						thumbnail: null
+					}));
+				}
 
 				callback(downloadables);
 			});
 		}
 	});
+};
+
+
+// TODO: Modularize these URL extractor function.
+var extractMethodA = function(html, videoServer) {
+	var videoPrefix = 'http://gateway';
+	var videoSuffix = 'server%3D'; // Plus one of iframeServers
+	var downloadUrl = util.substring(html, videoPrefix, videoSuffix + videoServer);
+	downloadUrl = decodeURIComponent(downloadUrl);
+	
+	return downloadUrl;
+};
+
+var extractMethodB = function(html) {
+	var $iframe = cheerio.load(html);
+	var downloadUrl = $iframe('meta[property="og:video"]').attr('content');
+	
+	return downloadUrl;
 };
 
 module.exports = new DownloaderImpl();
