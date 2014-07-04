@@ -17,23 +17,23 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		var iframes = $('#playbox iframe[src]');
 		
 		var iframePrefixes = [
-			'http://yourupload.com/embed_ext/videoweed/',
 			'http://videofun.me/embed',
 			'http://videobug.net/embed.php',
 			'http://play44.net/embed.php',
 			'http://byzoo.org/embed.php',
-			'http://playpanda.net/embed.php'
+			'http://playpanda.net/embed.php',
+			'http://yourupload.com/embed_ext/videoweed/'
 		];
 		
 		var compatibleIframeNumber = -1; // Iframe in the page
 		var iframePrefixIndex = -1; // Index in the iframePrefixes array
 
 		outerloop:
-		for(var i = 0; i < iframes.length; i++) {
-			for(var j = 1; j < iframePrefixes.length; j++) { // Skip yourupload.com
-				if(iframes[i].attribs.src.indexOf(iframePrefixes[j]) === 0) {
-					compatibleIframeNumber = i;
-					iframePrefixIndex = j;
+		for(var i = 0; i < iframePrefixes.length; i++) {
+			for(var j = 0; j < iframes.length; j++) {
+				if(iframes[j].attribs.src.indexOf(iframePrefixes[i]) === 0) {
+					compatibleIframeNumber = j;
+					iframePrefixIndex = i;
 					break outerloop;
 				}
 			}
@@ -45,17 +45,17 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		}
 		
 		var videoServers = [
-			null,
 			'videofun',
 			'videobug',
 			'play44',
 			'byzoo',
-			'vidzur'
+			'vidzur',
+			null
 		];
 
 		var title = $('.tmain h1').text().trim();
 		util.getHtml(iframes[compatibleIframeNumber].attribs.src, function(iframeHtml) {
-			if(iframePrefixIndex === 0) {
+			if(iframePrefixIndex === 5) {
 				var $iframe = cheerio.load(iframeHtml);
 				var downloadUrl = $iframe('meta[property="og:video"]').attr('content');
 				downloadables.push(new Downloadables({
