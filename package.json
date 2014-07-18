@@ -1,0 +1,27 @@
+{
+  "name": "drama-downloader",
+  "version": "0.1.0",
+  "description": "Video streaming link extractor.",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "~1.3.1",
+    "cheerio": "~0.17.0",
+    "express": "~4.4.3",
+    "httpsync": "~0.0.8",
+    "request": "~2.36.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jiwandono/drama-downloader.git"
+  },
+  "author": "Adityo Jiwandono",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/jiwandono/drama-downloader/issues"
+  }
+}
