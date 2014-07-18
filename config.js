@@ -1,5 +1,5 @@
-module.exports.ip   = process.env.OPENSHIFT_NODEJS_IP   || '0.0.0.0';
-module.exports.port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+module.exports.ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP   || '0.0.0.0';
+module.exports.port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 6667;
 
 module.exports.mysql_hostname = process.env.OPENSHIFT_MYSQL_DB_HOST || 'localhost';
 module.exports.mysql_port     = process.env.OPENSHIFT_MYSQL_DB_PORT || '3306';
