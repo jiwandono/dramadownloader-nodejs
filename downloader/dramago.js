@@ -8,13 +8,13 @@ var util           = require('../util');
 function DownloaderImpl() {}
 
 DownloaderImpl.prototype = new DownloaderBase();
-DownloaderImpl.prototype.domains = ['www.dramago.com', 'www.gooddrama.net', 'www.animetoon.tv', 'www.anime44.com', 'www.yodrama.com'];
+DownloaderImpl.prototype.domains = ['www.dramago.com', 'www.gooddrama.net', 'www.animetoon.tv', 'www.anime44.com', 'www.yodrama.com', 'dramafire.com'];
 DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 	util.getHtml(url, function(html) {
 		var downloadables = [];
 		
 		var $ = cheerio.load(html);
-		var iframes = $('#streams iframe');
+		var iframes = $('#streams iframe, .entry iframe'); // '.entry iframe' is specific for dramafire.com
 		
 		var iframePrefixes = [
 			'http://videofun.me/embed',
@@ -55,7 +55,7 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			null
 		];
 		
-		var title = $('h1.generic').text().trim();
+		var title = $('h1.generic, h1.title').text().trim();
 		
 		// .part_list and part_nav are mutually exclusive.
 		var parts = $($('.part_list, .part_nav')[compatibleIframeNumber]).find('a');
@@ -91,7 +91,7 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 				})(j);
 			}
 		} else {
-			var iframe = $('#streams iframe')[compatibleIframeNumber];
+			var iframe = iframes[compatibleIframeNumber];
 			var src = iframe.attribs.src;
 
 			util.getHtml(src, function(iframeHtml) {
