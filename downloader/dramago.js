@@ -23,7 +23,8 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			'http://byzoo.org/embed.php',
 			'http://playpanda.net/embed.php',
 			'http://yourupload.com/embed/',
-			'http://embed.yucache.net/'
+			'http://embed.yucache.net/',
+			'http://embed.yourupload.com/'
 		];
 
 		var compatibleIframeNumber = -1; // Iframe in the page
@@ -51,6 +52,7 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			'play44',
 			'byzoo',
 			'vidzur',
+			null,
 			null,
 			null
 		];
