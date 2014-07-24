@@ -17,8 +17,7 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		var iframes = $('iframe[src]');
 		
 		var targetIframe = null;
-		var targetPrefix = 'http://www.dramacool.com/embeddrama-';
-		var targetSuffix = '.html';
+		var targetPrefix = 'http://redirector.googlevideo.com';
 		
 		for(var i = 0; i < iframes.length; i++) {
 			var src = iframes[i].attribs.src;
@@ -31,8 +30,7 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		if(targetIframe) {
 			var title = $('.title-detail-ep-film').text().trim();
 			
-			var downloadUrlBase64 = src.substring(targetPrefix.length, src.indexOf(targetSuffix));
-			var downloadUrl = new Buffer(downloadUrlBase64, 'base64').toString('utf8');
+			var downloadUrl = src;
 			downloadUrl += '&title=' + util.buildFilename(title);
 
 			downloadables.push(new Downloadables({
