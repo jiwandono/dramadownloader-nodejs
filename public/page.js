@@ -65,7 +65,10 @@ $(function() {
 		$('.result').hide();
 		$('#result-success').show();
 		
-		$('#download-title').text(downloadables[0].title);
+		if(downloadables[0].title) {
+			$('#download-title').text(downloadables[0].title);
+			document.title = downloadables[0].title + ' | ' + document.title;
+		}
 		createDownloadButtons(downloadables);
 	}
 	
