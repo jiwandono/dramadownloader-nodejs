@@ -14,23 +14,13 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		var downloadables = [];
 		
 		var $ = cheerio.load(html);
-		var iframes = $('iframe[src]');
 		
-		var targetIframe = null;
-		var targetPrefix = 'http://redirector.googlevideo.com';
+		// Method 1: Find <video> tag, extract source URL.
+		var downloadUrl = $('video source').attr('src');
 		
-		for(var i = 0; i < iframes.length; i++) {
-			var src = iframes[i].attribs.src;
-			if(src.indexOf(targetPrefix) === 0) {
-				targetIframe = iframes[i];
-				break;
-			}
-		}
-		
-		if(targetIframe) {
+		if(downloadUrl) {
 			var title = $('.title-detail-ep-film').text().trim();
 			
-			var downloadUrl = src;
 			downloadUrl += '&title=' + util.buildFilename(title);
 
 			downloadables.push(new Downloadables({
