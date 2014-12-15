@@ -28,7 +28,7 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			}));
 		} else {
 			// Method 2: Base64Decode part of iframe src.
-			var downloadUrlBase64 = $('iframe[src^="/embeddrama.php"]').attr('src');
+			var downloadUrlBase64 = $('iframe[src*="embeddrama.php"]').attr('src');
 			if(downloadUrlBase64) {
 				var downloadUrl = new Buffer(downloadUrlBase64.substr(19), 'base64').toString('ascii');
 				var title = $('.title-detail-ep-film').text().trim();
