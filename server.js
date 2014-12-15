@@ -34,6 +34,19 @@ app.post('/getDownloadables', function(req, res) {
 	});
 });
 
+app.get('/_getRawHttp', function(req, res) {
+	util.getRawHttp(req.query.url, function(error, response) {
+		var jsonResponse = {
+			'error': error,
+			'response': response
+		};
+		res.writeHead(200, {
+			'Content-Type': 'application/json',
+		});
+		res.end(JSON.stringify(jsonResponse));
+	});
+});
+
 app.listen(config.port, config.ip, function() {
 	console.log((new Date()) + ' Server is listening on port ' + config.port);
 });
