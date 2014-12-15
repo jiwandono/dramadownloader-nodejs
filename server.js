@@ -25,7 +25,11 @@ app.post('/getDownloadables', function(req, res) {
 		counter++;
 
 		var jsonResponse = {'downloadables': downloadables};
-		res.writeHead(200, {'Content-Type': 'application/json'});
+		res.writeHead(200, {
+			'Content-Type': 'application/json',
+			'Access-Control-Allow-Origin': config.cors_origin,
+			'Vary': 'Origin'
+		});
 		res.end(JSON.stringify(jsonResponse));
 	});
 });

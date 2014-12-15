@@ -7,6 +7,8 @@ module.exports.mysql_username = process.env.OPENSHIFT_MYSQL_DB_USERNAME || '';
 module.exports.mysql_password = process.env.OPENSHIFT_MYSQL_DB_PASSWORD || '';
 module.exports.mysql_database = process.env.OPENSHIFT_MYSQL_DB_DATABASE || '';
 
+module.exports.cors_origin = 'http://dramadownloader.com';
+
 module.exports.fileSuffix = '[DramaDownloader.com]';
 module.exports.downloaders = [
 	require('./downloader/dramacool'),
