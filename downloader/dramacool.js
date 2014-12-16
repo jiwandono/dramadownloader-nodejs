@@ -8,7 +8,7 @@ var util           = require('../util');
 function DownloaderImpl() {}
 
 DownloaderImpl.prototype = new DownloaderBase();
-DownloaderImpl.prototype.domains = ['www.dramacool.com'];
+DownloaderImpl.prototype.domains = ['www.dramacool.com', 'www.dramacool.tv', 'dramacool.tv'];
 DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 	util.getHtml(url, function(html) {
 		var downloadables = [];
