@@ -1,4 +1,11 @@
 $(function() {
+	var endpoints = [
+		'http://dd11.dramadownloader.com',
+		'http://dd12.dramadownloader.com',
+		'http://dd13.dramadownloader.com',
+		'http://dd14.dramadownloader.com'
+	];
+
 	handleInputBoxChange();
 	detectRequestParameter();
 	
@@ -26,9 +33,11 @@ $(function() {
 			url: url
 		};
 		
+		var endpoint = endpoints[Math.floor(Math.random() * endpoints.length)];
+
 		$.ajax({
 			type: "POST",
-			url: "getDownloadables",
+			url: endpoint + "/getDownloadables",
 			data: postData,
 			success: function(response) {
 				var downloadables = response.downloadables;
