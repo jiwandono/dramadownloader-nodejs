@@ -8,7 +8,7 @@ var util           = require('../util');
 function DownloaderImpl() {}
 
 DownloaderImpl.prototype = new DownloaderBase();
-DownloaderImpl.prototype.domains = ['www.dramacool.com', 'www.dramacool.tv', 'dramacool.tv'];
+DownloaderImpl.prototype.domains = ['www.dramacool.com', 'www.dramacool.tv', 'dramacool.tv', 'anime4you.net', 'www.anime4you.net'];
 DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 	util.getHtml(url, function(html) {
 		var downloadables = [];
@@ -28,10 +28,10 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			}));
 		} else {
 			// Method 2: Base64Decode part of iframe src.
-			var downloadUrlBase64 = $('iframe[src*="embeddrama.php"]').attr('src');
+			var downloadUrlBase64 = $('iframe[src*="embeddrama.php"], iframe[src*="embed1ads.php"]').attr('src');
 			if(downloadUrlBase64) {
-				var pos = downloadUrlBase64.search("embeddrama\\.php\\?id=");
-				var downloadUrl = new Buffer(downloadUrlBase64.substr(pos + "embeddrama.php?id=".length), 'base64').toString('ascii');
+				var pos = downloadUrlBase64.search("\\?id=");
+				var downloadUrl = new Buffer(downloadUrlBase64.substr(pos + "?id=".length), 'base64').toString('ascii');
 				var title = $('.title-detail-ep-film').text().trim();
 				downloadUrl += '&title=' + util.buildFilename(title);
 				downloadables.push(new Downloadables({
