@@ -8,6 +8,7 @@ $(function() {
 
 	handleInputBoxChange();
 	detectRequestParameter();
+	initRetryButton();
 	
 	/* ---------------- */
 	
@@ -27,6 +28,7 @@ $(function() {
 
 	function getDownloadUrl(url) {
 		$('form input').attr('disabled', 'disabled');
+		$('#result-fail').hide();
 		$('#result-processing').show();
 		
 		var postData = {
@@ -50,6 +52,12 @@ $(function() {
 			error: function() {
 				handleFail();
 			}
+		});
+	}
+
+	function initRetryButton() {
+		$('a.button-retry').click(function() {
+			detectRequestParameter();
 		});
 	}
 	

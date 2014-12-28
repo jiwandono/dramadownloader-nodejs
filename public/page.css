@@ -97,6 +97,18 @@
 	box-sizing: content-box;
 }
 
+.button-retry {
+	text-decoration: none;
+	text-align: center;
+	display: inline-block;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin: 2px;
+	width: 80px;
+	font-size: 14px;
+	box-sizing: content-box;
+}
+
 #result-fail {
 	width: 620px;
 	border: 1px solid #3e3e3d;
