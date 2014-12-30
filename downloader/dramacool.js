@@ -27,13 +27,32 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 				title: title,
 				thumbnail: null
 			}));
-		} else {
+		}
+
+		if(downloadables.length === 0) {
 			// Method 2: Base64Decode part of iframe src.
 			var downloadUrlBase64 = $('iframe[src*="embeddrama.php"], iframe[src*="embed1ads.php"]').attr('src');
 			if(downloadUrlBase64) {
 				var pos = downloadUrlBase64.search("\\?id=");
 				var downloadUrl = new Buffer(downloadUrlBase64.substr(pos + "?id=".length), 'base64').toString('ascii');
 				downloadUrl += '&title=' + util.buildFilename(title);
+				downloadables.push(new Downloadables({
+					url: downloadUrl,
+					title: title,
+					thumbnail: null
+				}));
+			}
+		}
+
+		if(downloadables.length === 0) {
+			// Method 3: Deduce download links from embedeuxN.php?video=VIDEO_ID
+			var embedeuxs = $('iframe[src*=embedeux]');
+			if(embedeuxs.length > 0) {
+				// Pick the first
+				var src = $(embedeuxs[0]).attr('src');
+				var nodeId = src[src.search('\\.php') -1];
+				var videoId = src.split('?')[1].split('&')[0].substr(6); // get part after video=
+				downloadUrl = 'http://store' + nodeId + '.dramaupload.com/video-' + videoId + '.mp4';
 				downloadables.push(new Downloadables({
 					url: downloadUrl,
 					title: title,
