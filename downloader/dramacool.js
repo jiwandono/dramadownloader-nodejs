@@ -15,11 +15,12 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		
 		var $ = cheerio.load(html);
 		
+		var title = $('.title-detail-ep-film').text().trim();
+
 		// Method 1: Find <video> tag, extract source URL.
 		var downloadUrl = $('video source').attr('src');
 		
 		if(downloadUrl) {
-			var title = $('.title-detail-ep-film').text().trim();
 			downloadUrl += '&title=' + util.buildFilename(title);
 			downloadables.push(new Downloadables({
 				url: downloadUrl,
@@ -32,7 +33,6 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			if(downloadUrlBase64) {
 				var pos = downloadUrlBase64.search("\\?id=");
 				var downloadUrl = new Buffer(downloadUrlBase64.substr(pos + "?id=".length), 'base64').toString('ascii');
-				var title = $('.title-detail-ep-film').text().trim();
 				downloadUrl += '&title=' + util.buildFilename(title);
 				downloadables.push(new Downloadables({
 					url: downloadUrl,
@@ -42,7 +42,28 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			}
 		}
 
-		callback(downloadables);
+		if(downloadables.length === 0) {
+			// Method 3: Extract video link from embed page
+			var embedScript = $('input[value*="embed.dramacool.com"]').val();
+			var embedPage = cheerio.load(embedScript)('iframe').attr('src');
+			util.getHtml(embedPage, function(embedHtml) {
+				var $$ = cheerio.load(embedHtml);
+				var flashvars = $$('embed').attr('flashvars');
+				var flashvarsDecoded = decodeURIComponent(flashvars);
+				
+				downloadUrl = flashvarsDecoded.split('|')[1];
+				downloadUrl += '&title=' + util.buildFilename(title);
+				downloadables.push(new Downloadables({
+					url: downloadUrl,
+					title: title,
+					thumbnail: null
+				}));
+
+				callback(downloadables);
+			});
+		} else {
+			callback(downloadables);
+		}
 	});
 };
 
