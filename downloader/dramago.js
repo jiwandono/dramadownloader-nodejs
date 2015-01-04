@@ -15,6 +15,21 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		
 		var $ = cheerio.load(html);
 		var iframes = $('#streams iframe, .entry iframe'); // '.entry iframe' is specific for dramafire.com
+
+		var title = $('h1.generic, h1.title').text().trim();
+
+		if(url.search('dramafire.com') >= 0) {
+			var matches = html.match(/(http:\/\/)(.+?)(\.mp4)/g);
+			if(matches.length > 0) {
+				downloadables.push(new Downloadables({
+					url: matches[0],
+					title: title,
+					thumbnail: null
+				}));
+				callback(downloadables);
+				return;
+			}
+		}
 		
 		var iframePrefixes = [
 			'http://embed.yucache.net/',
@@ -58,8 +73,6 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			'vidzur',
 			null
 		];
-		
-		var title = $('h1.generic, h1.title').text().trim();
 		
 		// .part_list and part_nav are mutually exclusive.
 		var parts = $($('.part_list, .part_nav')[compatibleIframeNumber]).find('a');
