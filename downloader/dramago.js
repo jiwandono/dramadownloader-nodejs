@@ -35,12 +35,12 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			'http://embed.yucache.net/',
 			'http://embed.yourupload.com/',
 			'http://yucache.net/',
+			'http://yourupload.com/',
 			'http://videofun.me/embed',
 			'http://videobug.net/embed.php',
 			'http://play44.net/embed.php',
 			'http://byzoo.org/embed.php',
-			'http://playpanda.net/embed.php',
-			'http://yourupload.com/embed/'
+			'http://playpanda.net/embed.php'
 		];
 
 		var compatibleIframeNumber = -1; // Iframe in the page
@@ -66,12 +66,12 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 			null,
 			null,
 			null,
+			null,
 			'videofun',
 			'videobug',
 			'play44',
 			'byzoo',
-			'vidzur',
-			null
+			'vidzur'
 		];
 		
 		// .part_list and part_nav are mutually exclusive.
