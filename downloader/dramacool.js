@@ -12,6 +12,11 @@ DownloaderImpl.prototype.domains = ['www.dramacool.com', 'www.dramacool.tv', 'dr
 DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 	util.getHtml(url, function(html) {
 		var downloadables = [];
+
+		if(!html) {
+			callback(downloadables);
+			return;
+		}
 		
 		var $ = cheerio.load(html);
 		
