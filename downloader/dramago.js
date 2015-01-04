@@ -17,14 +17,15 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		var iframes = $('#streams iframe, .entry iframe'); // '.entry iframe' is specific for dramafire.com
 		
 		var iframePrefixes = [
+			'http://embed.yucache.net/',
+			'http://embed.yourupload.com/',
+			'http://yucache.net/',
 			'http://videofun.me/embed',
 			'http://videobug.net/embed.php',
 			'http://play44.net/embed.php',
 			'http://byzoo.org/embed.php',
 			'http://playpanda.net/embed.php',
-			'http://yourupload.com/embed/',
-			'http://embed.yucache.net/',
-			'http://embed.yourupload.com/'
+			'http://yourupload.com/embed/'
 		];
 
 		var compatibleIframeNumber = -1; // Iframe in the page
@@ -47,13 +48,14 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		}
 		
 		var videoServers = [
+			null,
+			null,
+			null,
 			'videofun',
 			'videobug',
 			'play44',
 			'byzoo',
 			'vidzur',
-			null,
-			null,
 			null
 		];
 		
@@ -72,7 +74,7 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 
 						util.getHtml(src, function(iframeHtml) {
 							var downloadUrl = null;
-							if(iframePrefixIndex === 5 || iframePrefixIndex === 6) {
+							if(iframePrefixIndex <= 2) {
 								downloadUrl = extractMethodB(iframeHtml);
 							} else {
 								downloadUrl = extractMethodA(iframeHtml, videoServers[iframePrefixIndex]);
@@ -98,7 +100,7 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 
 			util.getHtml(src, function(iframeHtml) {
 				var downloadUrl = null;
-				if(iframePrefixIndex === 5 || iframePrefixIndex === 6) {
+				if(iframePrefixIndex <= 2) {
 					downloadUrl = extractMethodB(iframeHtml);
 				} else {
 					downloadUrl = extractMethodA(iframeHtml, videoServers[iframePrefixIndex]);
