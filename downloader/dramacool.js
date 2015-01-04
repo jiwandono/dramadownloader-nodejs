@@ -70,30 +70,34 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		if(downloadables.length === 0) {
 			// Method 3: Extract video link from embed page
 			var embedScript = $('input[value*="embed"]').val();
-			var embedPage = cheerio.load(embedScript)('iframe').attr('src');
-			util.getHtml(embedPage, function(embedHtml) {
-				var $$ = cheerio.load(embedHtml);
-				var flashvars = $$('embed').attr('flashvars');
-				if(typeof flashvars === 'undefined') {
-					downloadUrl = $$('video source').attr('src');
-					downloadables.push(new Downloadables({
-						url: downloadUrl,
-						title: title,
-						thumbnail: null
-					}));
-				} else {
-					var flashvarsDecoded = decodeURIComponent(flashvars);
-					downloadUrl = flashvarsDecoded.split('|')[1];
-					downloadUrl += '&title=' + util.buildFilename(title);
-					downloadables.push(new Downloadables({
-						url: downloadUrl,
-						title: title,
-						thumbnail: null
-					}));
-				}
+			if(embedScript) {
+				var embedPage = cheerio.load(embedScript)('iframe').attr('src');
+				util.getHtml(embedPage, function(embedHtml) {
+					var $$ = cheerio.load(embedHtml);
+					var flashvars = $$('embed').attr('flashvars');
+					if(typeof flashvars === 'undefined') {
+						downloadUrl = $$('video source').attr('src');
+						downloadables.push(new Downloadables({
+							url: downloadUrl,
+							title: title,
+							thumbnail: null
+						}));
+					} else {
+						var flashvarsDecoded = decodeURIComponent(flashvars);
+						downloadUrl = flashvarsDecoded.split('|')[1];
+						downloadUrl += '&title=' + util.buildFilename(title);
+						downloadables.push(new Downloadables({
+							url: downloadUrl,
+							title: title,
+							thumbnail: null
+						}));
+					}
 
+					callback(downloadables);
+				});
+			} else {
 				callback(downloadables);
-			});
+			}
 		} else {
 			callback(downloadables);
 		}
