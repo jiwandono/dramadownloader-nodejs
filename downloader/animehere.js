@@ -17,13 +17,15 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		var iframes = $('#playbox iframe[src]');
 		
 		var iframePrefixes = [
+			'http://embed.yucache.net/',
+			'http://embed.yourupload.com/',
+			'http://yucache.net/',
+			'http://yourupload.com/',
 			'http://videofun.me/embed',
 			'http://videobug.net/embed.php',
 			'http://play44.net/embed.php',
 			'http://byzoo.org/embed.php',
-			'http://playpanda.net/embed.php',
-			'http://yourupload.com/embed/',
-			'http://embed.yucache.net/'
+			'http://playpanda.net/embed.php'
 		];
 		
 		var compatibleIframeNumber = -1; // Iframe in the page
@@ -46,19 +48,21 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		}
 		
 		var videoServers = [
+			null,
+			null,
+			null,
+			null,
 			'videofun',
 			'videobug',
 			'play44',
 			'byzoo',
-			'vidzur',
-			null,
-			null
+			'vidzur'
 		];
 
 		var title = $('.tmain h1').text().trim();
 		util.getHtml(iframes[compatibleIframeNumber].attribs.src, function(iframeHtml) {
 			var downloadUrl = null;
-			if(iframePrefixIndex === 5 || iframePrefixIndex === 6) {
+			if(iframePrefixIndex <= 3) {
 				var $iframe = cheerio.load(iframeHtml);
 				downloadUrl = $iframe('meta[property="og:video"]').attr('content');
 			} else {
