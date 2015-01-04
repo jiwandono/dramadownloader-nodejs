@@ -89,9 +89,8 @@ function insertMonitorEntry(monitorEntry) {
 	monitor.push(monitorEntry);
 
 	// Remove expired entries
-	// var oneHourAgo = new Date().getTime() - 86400000;
 	var toDelete = -1;
-	var oneHourAgo = new Date().getTime() - 60000;
+	var oneHourAgo = new Date().getTime() - 3600000;
 	for(var i = 0; i < monitor.length; i++) {
 		if(monitor[i].timestamp > oneHourAgo) {
 			break;
