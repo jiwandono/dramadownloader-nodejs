@@ -20,7 +20,7 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 
 		if(url.search('dramafire.com') >= 0) {
 			var matches = html.match(/(http:\/\/)(.+?)(\.mp4)/g);
-			if(matches.length > 0) {
+			if(matches) {
 				downloadables.push(new Downloadables({
 					url: matches[0],
 					title: title,
