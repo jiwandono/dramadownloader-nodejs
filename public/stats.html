@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+
+        <title>Stats</title>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    </head>
+
+    <body>
+        <h1>Summary</h1>
+        <table id="table-summary">
+            <thead>
+                <tr>
+                    <td>Requests</td>
+                    <td>Success</td>
+                    <td>Failed</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="num-request" rowspan="2"></td>
+                    <td id="num-success"></td>
+                    <td id="num-failed"></td>
+                </tr>
+                <tr>
+                    <td id="perc-success"></td>
+                    <td id="perc-failed"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h1>Failed Requests</h1>
+        <table id="table-fails">
+            <thead>
+                <tr>
+                    <td>URL</td>
+                    <td>Count</td>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </body>
+
+    <script type="text/javascript">
+      function roundToTwo(num) {
+        return +(Math.round(num + "e+2")  + "e-2");
+      }
+
+      function escapeHtml(string) {
+        var entityMap = {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': '&quot;',
+          "'": '&#39;',
+          "/": '&#x2F;'
+        };
+
+        return String(string).replace(/[&<>"'\/]/g, function (s) {
+          return entityMap[s];
+        });
+      }
+
+      // ================================
+
+      var data = [];
+
+      var endpoints = [
+        'http://dd11.dramadownloader.com',
+        'http://dd12.dramadownloader.com',
+        'http://dd13.dramadownloader.com',
+        'http://dd14.dramadownloader.com'
+      ];
+
+      var latch = endpoints.length;
+
+      $(function() {
+        for(var i = 0; i < endpoints.length; i++) {
+          var url = endpoints[i] + '/_getMonitor';
+
+          (function(idx) {
+            $.getJSON(url, function(response) {
+              data[idx] = response;
+              latch--;
+            });
+          })(i);
+        }
+      });
+
+      var intervalId = setInterval(function() {
+        if(latch > 0) {
+          console.log('Waiting for data...');
+          return;
+        }
+
+        clearInterval(intervalId);
+
+        var numRequest = 0;
+        var numSuccess = 0;
+        var numFailed  = 0;
+        var failed = {};
+        for(var i = 0; i < endpoints.length; i++) {
+          var nodedata = data[i];
+          numRequest += nodedata.length;
+          for(var j = 0; j < nodedata.length; j++) {
+            if(nodedata[j].success) {
+              numSuccess++;
+            } else {
+              numFailed++;
+              var requestUrl = nodedata[j].url.trim();
+              if(failed[requestUrl]) {
+                failed[requestUrl] += 1;
+              } else {
+                failed[requestUrl] = 1;
+              }
+            }
+          }
+        }
+
+        $('#num-request').text(numRequest);
+        $('#num-success').text(numSuccess);
+        $('#num-failed').text(numFailed);
+
+        $('#perc-success').text(roundToTwo(100 * numSuccess/numRequest) + "%");
+        $('#perc-failed').text(roundToTwo(100 * numFailed/numRequest) + "%");
+
+        for(var url in failed) {
+          var escaped = escapeHtml(url);
+          $('#table-fails tbody').append("<tr><td>" + escaped + "</td><td>" + failed[url] + "</td></tr>");
+        }
+      }, 500);
+    </script>
+</html>
