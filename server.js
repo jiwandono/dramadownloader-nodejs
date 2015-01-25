@@ -67,6 +67,8 @@ app.get('/_getRawHttp', function(req, res) {
 app.get('/_procinfo', function(req, res) {
 	res.writeHead(200, {
 		'Content-Type': 'application/json',
+		'Access-Control-Allow-Origin': config.cors_origin,
+		'Vary': 'Origin'
 	});
 
 	res.end(JSON.stringify(procinfo));
@@ -75,6 +77,8 @@ app.get('/_procinfo', function(req, res) {
 app.get('/_getMonitor', function(req, res) {
 	res.writeHead(200, {
 		'Content-Type': 'application/json',
+		'Access-Control-Allow-Origin': config.cors_origin,
+		'Vary': 'Origin'
 	});
 
 	res.end(JSON.stringify(monitor));
