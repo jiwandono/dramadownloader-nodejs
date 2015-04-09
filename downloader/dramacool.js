@@ -21,6 +21,9 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		var $ = cheerio.load(html);
 		
 		var title = $('.title-detail-ep-film').text().trim();
+		if(title == '') {
+			title = $('.movie-detail > span.title').first().text();
+		}
 
 		// Method 1: Find <video> tag, extract source URL.
 		var downloadUrl = $('video source').attr('src');
@@ -85,12 +88,18 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 					} else {
 						var flashvarsDecoded = decodeURIComponent(flashvars);
 						downloadUrl = flashvarsDecoded.split('|')[1];
-						downloadUrl += '&title=' + util.buildFilename(title);
 						downloadables.push(new Downloadables({
 							url: downloadUrl,
 							title: title,
 							thumbnail: null
 						}));
+					}
+
+					// Alter filename
+					for(i in downloadables) {
+						if(downloadables[i].url.indexOf('redirector.googlevideo.com') > 0) {
+							downloadables[i].url += '&title=' + util.buildFilename(title);
+						}
 					}
 
 					callback(downloadables);
