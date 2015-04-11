@@ -97,8 +97,10 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 
 					// Alter filename
 					for(i in downloadables) {
-						if(downloadables[i].url.indexOf('redirector.googlevideo.com') > 0) {
-							downloadables[i].url += '&title=' + util.buildFilename(title);
+						if(downloadables[i].url) {
+							if(downloadables[i].url.indexOf('redirector.googlevideo.com') > 0) {
+								downloadables[i].url += '&title=' + util.buildFilename(title);
+							}
 						}
 					}
 
