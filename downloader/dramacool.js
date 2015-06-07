@@ -29,7 +29,6 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		var downloadUrl = $('video source').attr('src');
 		
 		if(downloadUrl) {
-			downloadUrl += '&title=' + util.buildFilename(title);
 			downloadables.push(new Downloadables({
 				url: downloadUrl,
 				title: title,
