@@ -20,7 +20,7 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 		
 		var $ = cheerio.load(html);
 		
-		var title = $('.title-detail-ep-film').text().trim();
+		var title = $('.title-detail-ep-film .title').text().trim();
 		if(title == '') {
 			title = $('.movie-detail > span.title').first().text();
 		}
