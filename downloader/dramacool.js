@@ -38,8 +38,7 @@ DownloaderImpl.prototype.getDownloadables = function(url, callback) {
 
 		if(downloadables.length === 0) {
 			// Method 2: Base64Decode part of iframe src.
-			var downloadUrlBase64 = $('iframe[src*="embeddrama.php"], iframe[src*="embed1ads.php"]').attr('src');
-			var downloadUrlBase64 = $('iframe[src*="embeddrama.php"], iframe[src*="newembeddrama.php"], iframe[src*="embed1ads.php"]').attr('src');
+			var downloadUrlBase64 = $('iframe[src*="embeddrama.php"], iframe[src*="newembeddrama.php"], iframe[src*="embed1ads.php"], iframe[src*="embeddramanox.php"]').attr('src');
 			if(downloadUrlBase64) {
 				var pos = downloadUrlBase64.search("\\?id=");
 				var downloadUrl = new Buffer(downloadUrlBase64.substr(pos + "?id=".length), 'base64').toString('ascii');
