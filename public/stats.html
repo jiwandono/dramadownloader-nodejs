@@ -70,17 +70,14 @@
       var data = [];
 
       var endpoints = [
-        'http://dd11.dramadownloader.com',
-        'http://dd12.dramadownloader.com',
-        'http://dd13.dramadownloader.com',
-        'http://dd14.dramadownloader.com'
+        'http://api.dramadownloader.com',
       ];
 
       var latch = endpoints.length;
 
       $(function() {
         for(var i = 0; i < endpoints.length; i++) {
-          var url = endpoints[i] + '/_getMonitor';
+          var url = endpoints[i] + '/v1/monitor/stats';
 
           (function(idx) {
             $.getJSON(url, function(response) {

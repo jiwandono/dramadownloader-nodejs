@@ -116,6 +116,13 @@
 	padding-right: 10px;
 }
 
+#result-unsupported {
+	width: 620px;
+	border: 1px solid #3e3e3d;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 .info small {
 	font-size: 10px;
 	color: #b6b6b6;

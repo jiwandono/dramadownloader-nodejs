@@ -1,9 +1,6 @@
 $(function() {
 	var endpoints = [
-		'http://dd11.dramadownloader.com',
-		'http://dd12.dramadownloader.com',
-		'http://dd13.dramadownloader.com',
-		'http://dd14.dramadownloader.com'
+		'http://api.dramadownloader.com',
 	];
 
 	handleInputBoxChange();
@@ -48,8 +45,8 @@ $(function() {
 
 		$.ajax({
 			type: "POST",
-			url: endpoint + "/getDownloadables",
-			data: postData,
+			url: endpoint + "/v1/drama/fetchstreams",
+			data: JSON.stringify(postData),
 			success: function(response) {
 				var elapsedMsec = 0;
 				try {
@@ -59,12 +56,15 @@ $(function() {
 					// no-op
 				}
 
-				var downloadables = response.downloadables;
-				if(downloadables.length > 0) {
+				var downloadables = response.links;
+				if(response.status == "OK") {
 					ga('send', 'event', 'downloads', 'submit-success', url, elapsedMsec);
 					handleSuccess(downloadables);
-				} else {
+				} else if(response.status == "FAILED") {
 					ga('send', 'event', 'downloads', 'submit-fail-int', url, elapsedMsec);
+					handleFail();
+				} else {
+					ga('send', 'event', 'downloads', 'submit-unsupported', url, elapsedMsec);
 					handleFail();
 				}
 			},
@@ -110,14 +110,16 @@ $(function() {
 	function createDownloadButtons(downloadables) {
 		var caption = "DOWNLOAD";
 		for(var i = 0; i < downloadables.length; i++) {
-			var buttonText = downloadables.length > 1
-					? caption + ' ' + 'PART ' + (i+1)
-					: caption;
+			var buttonText = caption + ' <br />(' + downloadables[i].name + ')';
 			var $button = $('<a>', {
 				class   : 'button button-download',
 				href    : downloadables[i].url,
-				download: ''
-			}).text(buttonText);
+			}).html(buttonText);
+
+			if(downloadables[i].isDirectLink)
+				$button.attr("download", "");
+			else
+				$button.attr("target", "_blank");
 			
 			$('#download-links').append($button);
 		}
@@ -128,10 +130,6 @@ $(function() {
 		$('.result').hide();
 		$('#result-success').show();
 		
-		if(downloadables[0].title) {
-			$('#download-title').text(downloadables[0].title);
-			document.title = downloadables[0].title + ' | ' + document.title;
-		}
 		createDownloadButtons(downloadables);
 	}
 	
@@ -139,5 +137,11 @@ $(function() {
 		$('form input').removeAttr('disabled', 'disabled');
 		$('.result').hide();
 		$('#result-fail').show();
+	}
+
+	function handleUnsupported() {
+		$('form input').removeAttr('disabled', 'disabled');
+		$('.result').hide();
+		$('#result-unsupported').show();
 	}
 });
